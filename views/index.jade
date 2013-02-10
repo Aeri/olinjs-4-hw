@@ -1,5 +1,36 @@
 extends layout
 
+block scripts
+  script(type ='text/javascript')
+    $(document).ready(function() {
+      $('#Submit').click(function (){
+        console.log("#{logged}");
+        console.log("Has been clicked");
+        var message = $("#newTweet").val();
+        console.log(message);
+        if (message <= 140 && req.body.twit.length > 0) {
+          $.post('/tweets/#{logged}', {twit: message}
+             , function (data) {});
+        }
+        else {
+          $("#newTweet").val("Please submit a twit between 1 and 140 characters.");
+        }
+      });
+    })
+
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Shitty Twitter (Shitter)
+  div(id='postBox')
+    h3(id='line1') Compose a Twit:
+    textarea(rows="7", cols="20", id="newTweet")
+    input(type="button", id="Submit", value="Twit that")
+      | Twit dat shit
+  div(id='tweetBox')
+    h2 Look at all these twits!
+    hr
+    each tweet in tweets
+      div(class="tweet")
+        div(class="user_name")
+          | <b> #{tweet._creator} </b>
+        div(class="tweet_body")
+          | #{tweet.tweet}

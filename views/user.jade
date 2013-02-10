@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1 Enter Username to Register or Sign In
+  form(method='post', action='/users/create')
+    | Username
+    input(type='text', name='name')
+    input(type='submit', name='submit', value='Go!')

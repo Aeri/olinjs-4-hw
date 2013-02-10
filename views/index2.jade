@@ -1,0 +1,16 @@
+extends layout
+
+block scripts
+  link(rel='stylesheet', href='/stylesheets/style2.css')
+
+block content
+  h1 Shitty Twitter (Shitter)
+  div(id='tweetBox')
+    h2 Look at all these twits!
+    hr
+    each tweet in tweets
+      div(class="tweet")
+        div(class="user_name")
+          | <b> #{tweet._creator} </b>
+        div(class="tweet_body")
+          | #{tweet.tweet}
