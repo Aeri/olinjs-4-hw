@@ -3,6 +3,13 @@ var User = usermodel.User;
 var tweetmodel = require('../models/tweetmodel');
 var Tweet = tweetmodel.Tweet;
 
+Array.prototype.sortByProp = function(p){
+	return this.sort(function(a,b){
+		return (a[p] < b[p]) ? 1 : (a[p] > b[p]) ? -1 : 0;
+	});
+};
+
+
 exports.new = function(req, res){
   console.log("This tweet has been posted!");
   var user = req.session.user;
@@ -18,6 +25,40 @@ exports.new = function(req, res){
       }
       else{
         console.log("Saved twit.");
+        getTweets(function (db_tweets) {
+          res.render('_twits', {logged: req.session.user, tweets: db_tweets});
+        });
       }
     });
 };
+
+exports.refresh = function(req, res){
+  console.log("The page is supposed to be refreshing right now.");
+  getTweets(function (db_tweets) {
+    res.render('_twits', {logged: req.session.user, tweets: db_tweets});
+  });
+};
+
+exports.display = function(req, res){
+  if (req.session.user) {
+    getTweets(function (db_tweets) {
+      res.render('index', {title: "Shitty Twitter!", logged: req.session.user, tweets: db_tweets});
+    })
+  }
+  else {
+    res.redirect("/users/new");
+	res.send("WOOO");
+  }
+};
+
+function getTweets (next) {
+  Tweet.find({}).exec(function (err, db_tweets) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      db_tweets.sortByProp('created');
+      next(db_tweets);
+    }
+ })
+ };

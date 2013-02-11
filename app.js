@@ -34,10 +34,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+app.get('/', tweet.display);
 app.get('/users/new', user.new);
 app.post('/users/create', user.create);
 app.post('/tweets/:user', tweet.new);
+app.get('/tweets/refresh', tweet.refresh);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

@@ -7,16 +7,29 @@ block scripts
         console.log("#{logged}");
         console.log("Has been clicked");
         var message = $("#newTweet").val();
-        console.log(message);
-        if (message <= 140 && req.body.twit.length > 0) {
+        console.log(message.length);
+        if (message.length <= 140 && message.length > 0) {
           $.post('/tweets/#{logged}', {twit: message}
-             , function (data) {});
+             , function (data) {
+                 $('#tweetBox').prepend(data);
+                 $("#newTweet").val("");
+             });
         }
         else {
           $("#newTweet").val("Please submit a twit between 1 and 140 characters.");
         }
       });
     })
+    $(document).ready(function() {
+      // find tweets
+      function findTweets() {
+        $.get('/tweets/refresh', {}, function (data) {
+          $('#tweetBox').html(data);
+        });
+      }
+
+      setInterval(findTweets, 2000);
+    });
 
 block content
   h1 Shitty Twitter (Shitter)
@@ -26,11 +39,4 @@ block content
     input(type="button", id="Submit", value="Twit that")
       | Twit dat shit
   div(id='tweetBox')
-    h2 Look at all these twits!
-    hr
-    each tweet in tweets
-      div(class="tweet")
-        div(class="user_name")
-          | <b> #{tweet._creator} </b>
-        div(class="tweet_body")
-          | #{tweet.tweet}
+    include _twits
