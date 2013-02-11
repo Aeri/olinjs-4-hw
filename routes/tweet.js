@@ -3,13 +3,6 @@ var User = usermodel.User;
 var tweetmodel = require('../models/tweetmodel');
 var Tweet = tweetmodel.Tweet;
 
-Array.prototype.sortByProp = function(p){
-	return this.sort(function(a,b){
-		return (a[p] < b[p]) ? 1 : (a[p] > b[p]) ? -1 : 0;
-	});
-};
-
-
 exports.new = function(req, res){
   console.log("This tweet has been posted!");
   var user = req.session.user;
@@ -52,12 +45,11 @@ exports.display = function(req, res){
 };
 
 function getTweets (next) {
-  Tweet.find({}).exec(function (err, db_tweets) {
+  Tweet.find({}).sort("-created").limit(20).exec(function (err, db_tweets) {
     if (err) {
       console.log(err);
     }
     else {
-      db_tweets.sortByProp('created');
       next(db_tweets);
     }
  })
