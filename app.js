@@ -10,8 +10,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , usermodel = require('./models/usermodel')
-  , mongoose = require('mongoose')
-  , $ = require('jquery');
+  , mongoose = require('mongoose');
 
 var app = express();
 
